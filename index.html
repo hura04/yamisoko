@@ -3,15 +3,42 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#08090d" />
   <title>ヤミソコ / Yamisoko</title>
 </head>
 <body>
-  <section id="game">
-    <div id="stage">
-      <canvas aria-label="game"></canvas>
-      <div id="overlay"></div>
+  <header class="site-header">
+    <div class="brand">
+      <span id="site-title" class="site-title">ヤミソコ</span>
+      <span id="site-tagline" class="site-tagline"></span>
     </div>
-  </section>
+    <button id="lang-toggle" type="button">English</button>
+  </header>
+  <main class="layout">
+    <aside id="left">
+      <section id="news" class="panel tabbed"></section>
+      <section id="howto" class="panel tabbed"></section>
+      <section id="best" class="panel"></section>
+    </aside>
+    <section id="game">
+      <div id="stage">
+        <canvas aria-label="game"></canvas>
+        <div id="overlay"></div>
+      </div>
+    </section>
+    <nav class="tabs" role="tablist">
+      <button type="button" role="tab" data-tab="news"></button>
+      <button type="button" role="tab" data-tab="howto"></button>
+      <button type="button" role="tab" data-tab="changelog"></button>
+      <button type="button" role="tab" data-tab="roadmap"></button>
+    </nav>
+    <aside id="right">
+      <section id="changelog" class="panel tabbed"></section>
+      <section id="roadmap" class="panel tabbed"></section>
+      <section id="share" class="panel"></section>
+      <section id="feedback" class="panel"></section>
+    </aside>
+  </main>
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

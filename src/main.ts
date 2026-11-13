@@ -6,7 +6,11 @@ import { detectLang, t } from './i18n/i18n'
 import { createInput } from './input/input'
 import { createRenderer } from './render/renderer'
 import { getStorage, loadSave, writeSave, type Lang, type SaveData } from './save/storage'
+import { mountPanels } from './site/panels'
 import { buildShareUrl } from './site/share'
+import { parseUpdates } from './site/updates'
+import updatesJson from '../content/updates.json'
+import siteJson from '../content/site.json'
 
 type Screen = 'title' | 'playing' | 'gameover' | 'shop'
 
@@ -24,7 +28,7 @@ const renderer = createRenderer(canvas)
 const input = createInput(stage, () => screen === 'playing')
 new ResizeObserver(() => { renderer.resize(); if (run) renderer.draw(run, null, performance.now() / 1000) }).observe(canvas)
 
-export function pageUrl(): string {
+function pageUrl(): string {
   return document.querySelector<HTMLLinkElement>('link[rel=canonical]')?.href ?? location.origin + location.pathname
 }
 
@@ -122,14 +126,21 @@ function frame(now: number) {
 }
 document.addEventListener('visibilitychange', () => { last = null })
 
-export function setLang(next: Lang) {
-  lang = next
-  save = { ...save, lang }
-  persist()
-  renderOverlay()
-}
-export function getLang(): Lang { return lang }
-export function getSave(): SaveData { return save }
+const panels = mountPanels(document.body, {
+  lang,
+  updates: parseUpdates(updatesJson),
+  save,
+  feedbackUrl: siteJson.feedbackUrl,
+  pageUrl: pageUrl(),
+  onLangChange(next) {
+    lang = next
+    save = { ...save, lang }
+    persist()
+    panels.setLang(lang)
+    renderOverlay()
+  },
+})
+window.addEventListener('yamisoko:save', e => panels.setSave((e as CustomEvent<SaveData>).detail))
 
 renderer.resize()
 go('title')
