@@ -12,7 +12,7 @@
 html, body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif; }
 #stage { position: relative; width: 100%; aspect-ratio: 1 / 1; touch-action: none; user-select: none; -webkit-user-select: none; overflow: hidden; border-radius: 10px; background: #000; }
 #stage canvas { display: block; width: 100%; height: 100%; }
-#overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 16px; text-align: center; background: rgba(5, 6, 10, 0.78); overflow-y: auto; }
+#overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: safe center; touch-action: pan-y; gap: 8px; padding: 16px; text-align: center; background: rgba(5, 6, 10, 0.78); overflow-y: auto; }
 #overlay[hidden] { display: none; }
 .ov-title { margin: 0; font-size: clamp(28px, 7vw, 48px); letter-spacing: 0.08em; color: var(--accent); text-shadow: 0 0 24px rgba(255, 211, 107, 0.45); }
 .ov-sub { margin: 0 0 8px; color: var(--muted); }
@@ -54,7 +54,7 @@ body { min-height: 100vh; }
 @media (max-width: 899px) {
   .layout { display: flex; flex-direction: column; align-items: stretch; gap: 12px; padding: 12px 16px; }
   #left, #right { display: contents; }
-  #game { order: 1; }
+  #game { order: 1; width: min(100%, calc(100svh - 24px)); align-self: center; }
   .tabs { order: 2; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
   #news { order: 3; } #howto { order: 4; } #changelog { order: 5; } #roadmap { order: 6; }
   #best { order: 7; } #share { order: 8; } #feedback { order: 9; }
@@ -63,4 +63,14 @@ body { min-height: 100vh; }
   .tabs button.active { border-color: var(--accent); color: var(--accent); }
   #changelog .entries { max-height: none; }
   .site-tagline { display: none; }
+}
+
+@media (max-width: 420px), (max-height: 420px) {
+  #overlay { gap: 0; padding: 6px 10px; }
+  #overlay p { margin: 0; }
+  .ov-title { font-size: 22px; }
+  .ov-buttons { margin-top: 6px; gap: 6px; }
+  #overlay button, #overlay .button { padding: 7px 12px; font-size: 14px; }
+  .shop { margin: 2px 0; gap: 2px; font-size: 13px; }
+  .shop button { padding: 3px 8px; min-width: 72px; font-size: 13px; }
 }

@@ -22,6 +22,20 @@ const fail = msg => { console.error('FAIL:', msg); process.exitCode = 1 }
   if (await page.isVisible('#overlay')) fail('overlay still visible after starting play')
   if ((await page.evaluate(() => window.scrollY)) !== 0) fail('page scrolled while pressing arrow keys')
 
+  // Losing window focus during play pauses the game
+  await page.click('#overlay [data-action="play"]').catch(() => {})
+  if (await page.isVisible('#overlay')) {
+    // a game over may have happened; start again
+    await page.click('#overlay [data-action="play"]')
+  }
+  await page.evaluate(() => window.dispatchEvent(new Event('blur')))
+  await page.waitForTimeout(100)
+  if (!(await page.isVisible('#overlay [data-action="resume"]'))) fail('blur did not pause the game')
+  else {
+    await page.click('#overlay [data-action="resume"]')
+    if (await page.isVisible('#overlay')) fail('resume did not hide the overlay')
+  }
+
   await page.evaluate(() => localStorage.setItem('yamisoko.save.v1', '{oops'))
   await page.reload()
   await page.waitForSelector('#overlay [data-action="play"]', { timeout: 5000 }).catch(() => fail('title not shown after corrupted save'))

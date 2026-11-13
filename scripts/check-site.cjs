@@ -54,6 +54,29 @@ const fail = msg => { console.error('FAIL:', msg); process.exitCode = 1 }
   await mp.screenshot({ path: `${outDir}/site-mobile.png`, fullPage: true })
   await m.close()
 
+  // Small portrait phone: shop must fit inside the stage
+  const se = await browser.newContext({ viewport: { width: 320, height: 568 }, locale: 'ja-JP', hasTouch: true, isMobile: true })
+  const sp = await se.newPage(); watch(sp)
+  await sp.goto(url)
+  await sp.click('#overlay [data-action="shop"]')
+  const st = await sp.locator('#stage').boundingBox()
+  const tt = await sp.locator('#overlay .ov-title').boundingBox()
+  const pb = await sp.locator('#overlay [data-action="play"]').boundingBox()
+  if (tt.y < st.y - 1) fail(`320x568 shop: title clipped (title ${tt.y} < stage ${st.y})`)
+  if (pb.y + pb.height > st.y + st.height + 1) fail(`320x568 shop: play button clipped (${pb.y + pb.height} > ${st.y + st.height})`)
+  await se.close()
+
+  // Landscape phone: whole stage and Play button on screen
+  const ls = await browser.newContext({ viewport: { width: 844, height: 390 }, locale: 'ja-JP', hasTouch: true, isMobile: true })
+  const lp = await ls.newPage(); watch(lp)
+  await lp.goto(url)
+  const lst = await lp.locator('#stage').boundingBox()
+  const lpb = await lp.locator('#overlay [data-action="play"]').boundingBox()
+  if (lst.height > 390) fail(`landscape: stage taller than viewport (${lst.height})`)
+  if (lpb.y + lpb.height > 390) fail(`landscape: play button below fold (${lpb.y + lpb.height})`)
+  await lp.screenshot({ path: `${outDir}/site-landscape.png` })
+  await ls.close()
+
   if (errors.length) fail('console errors: ' + errors.join(' | '))
   await browser.close()
   if (!process.exitCode) console.log('PASS check-site')

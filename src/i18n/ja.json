@@ -34,5 +34,7 @@
   "feedback.link": "ご意見・不具合報告はこちら",
   "lang.toggle": "English",
   "meta.description": "暗闇をライトで照らしながら地下へ降りていく、無料のブラウザアクションゲーム。",
-  "best.none": "まだ記録がありません"
+  "best.none": "まだ記録がありません",
+  "paused": "一時停止",
+  "resume": "つづける"
 }

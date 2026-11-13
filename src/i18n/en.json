@@ -34,5 +34,7 @@
   "feedback.link": "Send feedback / report a bug",
   "lang.toggle": "日本語",
   "meta.description": "A free browser action game: light up the darkness and dive deeper underground.",
-  "best.none": "No record yet"
+  "best.none": "No record yet",
+  "paused": "Paused",
+  "resume": "Resume"
 }

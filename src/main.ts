@@ -12,7 +12,7 @@ import { parseUpdates } from './site/updates'
 import updatesJson from '../content/updates.json'
 import siteJson from '../content/site.json'
 
-type Screen = 'title' | 'playing' | 'gameover' | 'shop'
+type Screen = 'title' | 'playing' | 'paused' | 'gameover' | 'shop'
 
 const storage = getStorage()
 let save: SaveData = loadSave(storage)
@@ -50,6 +50,10 @@ function renderOverlay() {
         <button class="primary" data-action="play">${esc(t(lang, 'play'))}</button>
         <button data-action="shop">${esc(t(lang, 'upgrades'))}</button>
       </div>`
+  } else if (screen === 'paused') {
+    overlay.innerHTML = `
+      <h2 class="ov-title">${esc(t(lang, 'paused'))}</h2>
+      <div class="ov-buttons"><button class="primary" data-action="resume">${esc(t(lang, 'resume'))}</button></div>`
   } else if (screen === 'gameover' && lastResult) {
     overlay.innerHTML = `
       <h2 class="ov-title">${esc(t(lang, 'gameOver'))}</h2>
@@ -95,6 +99,9 @@ overlay.addEventListener('click', e => {
     run = startRun(save.upgrades, Date.now() >>> 0)
     last = null
     go('playing')
+  } else if (action === 'resume') {
+    last = null
+    go('playing')
   } else if (action === 'shop') {
     go('shop')
   } else if (action === 'buy') {
@@ -124,7 +131,14 @@ function frame(now: number) {
   }
   renderer.draw(run, screen === 'playing' ? input.getStick() : null, now / 1000)
 }
-document.addEventListener('visibilitychange', () => { last = null })
+function pause() {
+  if (screen === 'playing') go('paused')
+}
+document.addEventListener('visibilitychange', () => {
+  last = null
+  if (document.hidden) pause()
+})
+window.addEventListener('blur', pause)
 
 const panels = mountPanels(document.body, {
   lang,
