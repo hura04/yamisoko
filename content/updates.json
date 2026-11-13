@@ -1,0 +1,5 @@
+[
+  { "date": "2026-11-13", "version": "1.0.0", "type": "news", "ja": "ヤミソコを公開しました！", "en": "Yamisoko is now live!" },
+  { "date": "2026-11-13", "version": "1.0.0", "type": "change", "ja": "v1.0.0 リリース", "en": "v1.0.0 released" },
+  { "date": "2026-11-13", "version": "1.0.0", "type": "plan", "ja": "効果音・BGM の追加", "en": "Add sound effects and music" }
+]
